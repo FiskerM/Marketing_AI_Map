@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketing AI Dependency Map</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #1e1e2e;
+    --accent1: #00f5c4;
+    --accent2: #ff4d6d;
+    --accent3: #7b61ff;
+    --accent4: #ffd166;
+    --text: #e8e8f0;
+    --muted: #6b6b8a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .header {
+    padding: 2rem 2.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+  }
+
+  .header h1 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--accent1);
+  }
+
+  .header p {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .legend {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0.8rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .main {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: calc(100vh - 100px);
+  }
+
+  .sidebar {
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    background: var(--surface);
+  }
+
+  .theme-btn {
+    width: 100%;
+    padding: 0.8rem 1.5rem;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+    letter-spacing: 0.02em;
+  }
+
+  .theme-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+  .theme-btn.active { color: var(--text); border-left-color: var(--accent1); background: rgba(0,245,196,0.05); }
+
+  .theme-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--accent1);
+    opacity: 0.6;
+    min-width: 16px;
+  }
+
+  .theme-btn.active .theme-num { opacity: 1; }
+
+  .content {
+    padding: 2rem 2.5rem;
+    overflow-y: auto;
+  }
+
+  .use-case-grid {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .use-case-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  .use-case-card:hover {
+    border-color: var(--accent3);
+    background: rgba(123,97,255,0.05);
+    transform: translateX(4px);
+  }
+
+  .use-case-card.highlighted {
+    border-color: var(--accent1);
+    background: rgba(0,245,196,0.07);
+  }
+
+  .use-case-card.dependency {
+    border-color: var(--accent4);
+    background: rgba(255,209,102,0.06);
+  }
+
+  .use-case-card.dependent {
+    border-color: var(--accent2);
+    background: rgba(255,77,109,0.06);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .difficulty-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+  }
+
+  .d1 { background: rgba(0,245,196,0.15); color: var(--accent1); }
+  .d2 { background: rgba(0,245,196,0.1); color: var(--accent1); opacity: 0.8; }
+  .d3 { background: rgba(255,209,102,0.15); color: var(--accent4); }
+  .d4 { background: rgba(255,77,109,0.1); color: var(--accent2); opacity: 0.8; }
+  .d5 { background: rgba(255,77,109,0.2); color: var(--accent2); }
+
+  .card-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .card-deps {
+    margin-top: 0.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .dep-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(123,97,255,0.1);
+    color: var(--accent3);
+    border: 1px solid rgba(123,97,255,0.2);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .dep-tag:hover { background: rgba(123,97,255,0.25); }
+
+  .info-panel {
+    display: none;
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: rgba(255,255,255,0.03);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    font-size: 0.75rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .info-panel.open { display: block; }
+
+  .dep-section {
+    margin-top: 0.5rem;
+  }
+
+  .dep-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.3rem;
+  }
+
+  .dep-label.needs { color: var(--accent4); }
+  .dep-label.enables { color: var(--accent1); }
+
+  .section-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+    color: var(--text);
+  }
+
+  .section-subtitle {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+  }
+
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .overview-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .overview-card:hover {
+    border-color: var(--accent1);
+    transform: translateY(-2px);
+  }
+
+  .ov-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--accent1);
+    margin-bottom: 0.3rem;
+  }
+
+  .ov-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .ov-bar {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-top: 0.5rem;
+  }
+
+  .ov-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent1);
+    transition: width 0.4s ease;
+  }
+
+  .ov-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.4rem;
+  }
+
+  .ov-stat {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--muted);
+  }
+
+  .critical-path {
+    background: var(--surface);
+    border: 1px solid var(--accent3);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .cp-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--accent3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+  }
+
+  .cp-flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+  }
+
+  .cp-node {
+    background: rgba(123,97,255,0.1);
+    border: 1px solid rgba(123,97,255,0.3);
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--accent3);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .cp-node:hover { background: rgba(123,97,255,0.25); }
+
+  .cp-arrow {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Marketing AI Dependency Map</h1>
+  <p>40 use cases · 8 themes · click to explore dependencies</p>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent1)"></div> Easy (1-2)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent4)"></div> Medium (3)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div> Hard (4-5)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent3)"></div> Depends on →</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent4)"></div> Needed by →</div>
+</div>
+
+<div class="main">
+  <div class="sidebar">
+    <button class="theme-btn active" onclick="showTheme('overview')">
+      <span class="theme-num">⬡</span> Overview
+    </button>
+    <button class="theme-btn" onclick="showTheme('creative')">
+      <span class="theme-num">01</span> Creative
+    </button>
+    <button class="theme-btn" onclick="showTheme('audience')">
+      <span class="theme-num">02</span> Audience
+    </button>
+    <button class="theme-btn" onclick="showTheme('content')">
+      <span class="theme-num">03</span> Content
+    </button>
+    <button class="theme-btn" onclick="showTheme('media')">
+      <span class="theme-num">04</span> Media & Performance
+    </button>
+    <button class="theme-btn" onclick="showTheme('insights')">
+      <span class="theme-num">05</span> Insights & Intelligence
+    </button>
+    <button class="theme-btn" onclick="showTheme('distribution')">
+      <span class="theme-num">06</span> Distribution & Channel
+    </button>
+    <button class="theme-btn" onclick="showTheme('measurement')">
+      <span class="theme-num">07</span> Measurement & Attribution
+    </button>
+    <button class="theme-btn" onclick="showTheme('journey')">
+      <span class="theme-num">08</span> Customer Journey
+    </button>
+  </div>
+
+  <div class="content" id="content">
+  </div>
+</div>
+
+<script>
+const themes = {
+  creative: {
+    name: "Creative",
+    num: "01",
+    useCases: [
+      {
+        id: "cr1", level: 1, title: "AI copy generation from brief",
+        desc: "Standalone — just needs a brief template and LLM access.",
+        needs: [],
+        enables: ["cr2", "cr4", "co2", "di2"]
+      },
+      {
+        id: "cr2", level: 2, title: "Ad variant creation (headlines, CTAs)",
+        desc: "Needs copy baseline from CR1. Feeds directly into performance testing.",
+        needs: ["cr1"],
+        enables: ["me2", "cr5", "di2"]
+      },
+      {
+        id: "cr3", level: 2, title: "Asset resizing & channel adaptation",
+        desc: "Requires final assets. Mostly a tooling problem (Figma plugins, Cloudinary).",
+        needs: ["cr1"],
+        enables: ["di1", "di2"]
+      },
+      {
+        id: "cr4", level: 3, title: "Brand voice consistency checking",
+        desc: "Needs a documented brand voice model + enough copy output to validate against.",
+        needs: ["cr1", "co1"],
+        enables: ["cr5", "co3"]
+      },
+      {
+        id: "cr5", level: 5, title: "Full creative concept from strategy brief",
+        desc: "Requires audience signals, competitive intelligence, brand rules, and performance data feeding the prompt.",
+        needs: ["cr1", "cr2", "cr4", "au3", "in3"],
+        enables: ["di3"]
+      }
+    ]
+  },
+  audience: {
+    name: "Audience",
+    num: "02",
+    useCases: [
+      {
+        id: "au1", level: 1, title: "Lookalike seed list preparation",
+        desc: "Low dependency — just needs a CRM export and a paid platform.",
+        needs: [],
+        enables: ["au2", "me2", "me3"]
+      },
+      {
+        id: "au2", level: 2, title: "Behavioral segment tagging & clustering",
+        desc: "Needs clean event data. CDP or GA4 is prerequisite.",
+        needs: ["au1", "da1"],
+        enables: ["au3", "au4", "jo3"]
+      },
+      {
+        id: "au3", level: 3, title: "Predictive churn / LTV scoring",
+        desc: "Requires historical transaction data + ML pipeline.",
+        needs: ["au2", "me1"],
+        enables: ["au4", "jo2", "jo5", "cr5"]
+      },
+      {
+        id: "au4", level: 4, title: "Dynamic audience refresh based on signals",
+        desc: "Needs real-time data pipeline, segment logic, and platform API integrations.",
+        needs: ["au2", "au3", "in2"],
+        enables: ["au5", "me5", "jo4"]
+      },
+      {
+        id: "au5", level: 5, title: "Real-time intent-based audience construction",
+        desc: "Full signal aggregation across open web + CTV + owned data. Highest complexity.",
+        needs: ["au4", "in4", "me4"],
+        enables: ["me5", "jo5"]
+      }
+    ]
+  },
+  content: {
+    name: "Content",
+    num: "03",
+    useCases: [
+      {
+        id: "co1", level: 1, title: "SEO keyword clustering & brief generation",
+        desc: "Standalone. Keyword tool + LLM. Fast win.",
+        needs: [],
+        enables: ["co2", "co4", "cr4"]
+      },
+      {
+        id: "co2", level: 2, title: "Blog/article drafting from brief",
+        desc: "Needs brief structure from CO1. CR1 copy patterns help quality.",
+        needs: ["co1", "cr1"],
+        enables: ["co3", "di1"]
+      },
+      {
+        id: "co3", level: 3, title: "Content repurposing across formats",
+        desc: "Needs content library + channel specs. Moderate orchestration.",
+        needs: ["co2", "cr3"],
+        enables: ["di2", "di3"]
+      },
+      {
+        id: "co4", level: 4, title: "Automated content calendar from performance data",
+        desc: "Requires performance feedback loop + content tagging system.",
+        needs: ["co1", "co2", "me1", "in1"],
+        enables: ["co5", "di3"]
+      },
+      {
+        id: "co5", level: 5, title: "Full content strategy from audience + competitive signals",
+        desc: "Requires audience insight, competitor monitoring, and performance history unified.",
+        needs: ["co4", "in3", "au3"],
+        enables: ["di4", "cr5"]
+      }
+    ]
+  },
+  media: {
+    name: "Media & Performance",
+    num: "04",
+    useCases: [
+      {
+        id: "me1", level: 1, title: "Automated performance alerts & anomaly detection",
+        desc: "Just needs API access to ad platforms. Standalone.",
+        needs: [],
+        enables: ["me2", "co4", "in1", "au3"]
+      },
+      {
+        id: "me2", level: 2, title: "Budget pacing & reallocation recommendations",
+        desc: "Needs alert system from ME1 + platform API write access.",
+        needs: ["me1", "au1"],
+        enables: ["me3", "me4"]
+      },
+      {
+        id: "me3", level: 3, title: "Cross-channel budget optimization",
+        desc: "Needs unified data from all channels + attribution baseline.",
+        needs: ["me2", "ma2"],
+        enables: ["me4", "me5"]
+      },
+      {
+        id: "me4", level: 4, title: "Predictive bid adjustments from external signals",
+        desc: "Needs trend + competitive signals feeding into bidding logic.",
+        needs: ["me3", "in3", "au4"],
+        enables: ["me5", "au5"]
+      },
+      {
+        id: "me5", level: 5, title: "Autonomous media buying with self-optimizing rules",
+        desc: "Full automation loop. Requires trust, governance, and every upstream layer.",
+        needs: ["me4", "au5", "ma3"],
+        enables: []
+      }
+    ]
+  },
+  insights: {
+    name: "Insights & Intelligence",
+    num: "05",
+    useCases: [
+      {
+        id: "in1", level: 1, title: "Automated weekly performance digest",
+        desc: "API pull + LLM summary. Fast to deploy.",
+        needs: ["me1"],
+        enables: ["in2", "co4", "me2"]
+      },
+      {
+        id: "in2", level: 2, title: "Competitor ad & messaging monitoring",
+        desc: "Needs scraping or tools like Pathmatics/Similarweb + LLM analysis.",
+        needs: ["in1"],
+        enables: ["in3", "au4", "cr5"]
+      },
+      {
+        id: "in3", level: 3, title: "Trend detection from social & search signals",
+        desc: "Multi-source aggregation. Needs structured signal pipeline.",
+        needs: ["in2"],
+        enables: ["in4", "co5", "cr5", "me4"]
+      },
+      {
+        id: "in4", level: 4, title: "Predictive scenario modeling (what-if analysis)",
+        desc: "Requires historical data + causal inference. Data science dependency.",
+        needs: ["in3", "ma3"],
+        enables: ["in5", "me5", "au5"]
+      },
+      {
+        id: "in5", level: 5, title: "Autonomous insight generation with recommended actions",
+        desc: "Full agentic loop — insight → recommendation → execution trigger.",
+        needs: ["in4", "ma4", "me4"],
+        enables: ["me5"]
+      }
+    ]
+  },
+  distribution: {
+    name: "Distribution & Channel",
+    num: "06",
+    useCases: [
+      {
+        id: "di1", level: 1, title: "Content scheduling & publishing automation",
+        desc: "CMS + scheduling tool. Low complexity.",
+        needs: ["co2"],
+        enables: ["di2", "di3"]
+      },
+      {
+        id: "di2", level: 2, title: "Channel-specific asset formatting & adaptation",
+        desc: "Needs assets from Creative + channel specs.",
+        needs: ["cr3", "di1"],
+        enables: ["di3", "di4"]
+      },
+      {
+        id: "di3", level: 3, title: "Cross-channel campaign orchestration",
+        desc: "Needs content + creative ready across channels + platform integrations.",
+        needs: ["di2", "co3", "cr5"],
+        enables: ["di4", "di5"]
+      },
+      {
+        id: "di4", level: 4, title: "Triggered distribution based on audience behavior",
+        desc: "Needs audience signals + real-time event pipeline.",
+        needs: ["di3", "au4", "jo2"],
+        enables: ["di5"]
+      },
+      {
+        id: "di5", level: 5, title: "Autonomous channel mix recommendation & execution",
+        desc: "Full loop from insight to channel decision to delivery.",
+        needs: ["di4", "me5", "in5"],
+        enables: []
+      }
+    ]
+  },
+  measurement: {
+    name: "Measurement & Attribution",
+    num: "07",
+    useCases: [
+      {
+        id: "ma0", level: 1, title: "Unified attribution view — define your north star metrics",
+        desc: "Before any automation, align the team on what numbers matter: which KPIs drive decisions, how each channel is credited, and what a single source of truth looks like. This is the foundation everything else is built on. Without it, dashboards, alerts, and models optimize for the wrong thing.",
+        needs: [],
+        enables: ["ma1", "ma2", "in1", "me1"]
+      },
+      {
+        id: "ma1", level: 2, title: "Automated dashboard refresh & anomaly flagging",
+        desc: "Looker/Tableau + API. Quick win with high visibility. Needs the metric framework from MA0 to know what to surface.",
+        needs: ["ma0", "me1"],
+        enables: ["ma2", "in1"]
+      },
+      {
+        id: "ma2", level: 3, title: "Multi-touch attribution modeling",
+        desc: "Needs unified data layer across paid channels + agreed attribution logic from MA0.",
+        needs: ["ma1"],
+        enables: ["ma3", "me3"]
+      },
+      {
+        id: "ma3", level: 4, title: "Incrementality test design & readout",
+        desc: "Needs controlled experiment infrastructure. Stats knowledge required.",
+        needs: ["ma2"],
+        enables: ["ma4", "in4", "me5"]
+      },
+      {
+        id: "ma4", level: 5, title: "Marketing Mix Modeling automation",
+        desc: "Long data history required. Heavy modeling dependency.",
+        needs: ["ma3", "in3"],
+        enables: ["ma5", "in5"]
+      },
+      {
+        id: "ma5", level: 6, title: "Unified measurement across paid, owned, earned",
+        desc: "Requires all attribution streams unified into a single truth layer.",
+        needs: ["ma4", "in4", "di3"],
+        enables: ["in5", "me5"]
+      }
+    ]
+  },
+  journey: {
+    name: "Customer Journey",
+    num: "08",
+    useCases: [
+      {
+        id: "jo1", level: 1, title: "Email personalization (name, product, content block)",
+        desc: "ESP + merge tags. Zero infrastructure needed.",
+        needs: [],
+        enables: ["jo2", "jo3"]
+      },
+      {
+        id: "jo2", level: 2, title: "Triggered lifecycle comms (welcome, churn, re-engage)",
+        desc: "Needs behavioral event triggers from CRM/CDP.",
+        needs: ["jo1", "au2"],
+        enables: ["jo3", "di4"]
+      },
+      {
+        id: "jo3", level: 3, title: "Dynamic landing page personalization by segment",
+        desc: "Needs segment definitions + CMS personalization layer.",
+        needs: ["jo2", "au2"],
+        enables: ["jo4", "jo5"]
+      },
+      {
+        id: "jo4", level: 4, title: "Cross-channel journey orchestration",
+        desc: "Needs unified customer ID + event stream across email, paid, web, CTV.",
+        needs: ["jo3", "di4", "au4"],
+        enables: ["jo5"]
+      },
+      {
+        id: "jo5", level: 5, title: "1:1 real-time personalization across all touchpoints",
+        desc: "Full CDP + decisioning engine + sub-second latency. Highest complexity in the map.",
+        needs: ["jo4", "au5", "in5"],
+        enables: []
+      }
+    ]
+  }
+};
+
+// Build lookup
+const allUseCases = {};
+Object.values(themes).forEach(t => t.useCases.forEach(uc => allUseCases[uc.id] = uc));
+
+function getDiffLabel(l) {
+  const labels = ['', 'Easy', 'Easy', 'Medium', 'Hard', 'Hard', 'Hard'];
+  return labels[l];
+}
+
+function renderCard(uc, active = false) {
+  const needsNames = uc.needs.map(id => allUseCases[id]?.title || id);
+  const enablesNames = uc.enables.map(id => allUseCases[id]?.title || id);
+  
+  return `
+    <div class="use-case-card" id="card-${uc.id}" onclick="toggleCard('${uc.id}')">
+      <div class="card-header">
+        <span class="difficulty-badge d${uc.level}">${getDiffLabel(uc.level)} · ${uc.level}</span>
+        <span class="card-title">${uc.title}</span>
+      </div>
+      ${uc.needs.length > 0 ? `<div class="card-deps">
+        ${uc.needs.map(id => `<span class="dep-tag" onclick="event.stopPropagation(); jumpTo('${id}')">${allUseCases[id]?.title || id}</span>`).join('')}
+      </div>` : ''}
+      <div class="info-panel" id="info-${uc.id}">
+        <div>${uc.desc}</div>
+        ${uc.needs.length > 0 ? `<div class="dep-section">
+          <div class="dep-label needs">▲ Needs (${uc.needs.length})</div>
+          ${uc.needs.map(id => `· ${allUseCases[id]?.title}`).join('<br>')}
+        </div>` : ''}
+        ${uc.enables.length > 0 ? `<div class="dep-section" style="margin-top:0.5rem">
+          <div class="dep-label enables">▼ Enables (${uc.enables.length})</div>
+          ${uc.enables.map(id => `· ${allUseCases[id]?.title}`).join('<br>')}
+        </div>` : ''}
+      </div>
+    </div>`;
+}
+
+function toggleCard(id) {
+  const info = document.getElementById(`info-${id}`);
+  const card = document.getElementById(`card-${id}`);
+  const isOpen = info.classList.contains('open');
+  
+  // Close all
+  document.querySelectorAll('.info-panel').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.use-case-card').forEach(c => {
+    c.classList.remove('highlighted','dependency','dependent');
+  });
+  
+  if (!isOpen) {
+    info.classList.add('open');
+    card.classList.add('highlighted');
+    const uc = allUseCases[id];
+    uc.needs.forEach(nid => {
+      const c = document.getElementById(`card-${nid}`);
+      if (c) c.classList.add('dependency');
+    });
+    uc.enables.forEach(eid => {
+      const c = document.getElementById(`card-${eid}`);
+      if (c) c.classList.add('dependent');
+    });
+  }
+}
+
+function jumpTo(id) {
+  // Find which theme
+  let targetTheme = null;
+  Object.entries(themes).forEach(([key, t]) => {
+    if (t.useCases.find(uc => uc.id === id)) targetTheme = key;
+  });
+  if (targetTheme) {
+    showTheme(targetTheme);
+    setTimeout(() => {
+      toggleCard(id);
+      const el = document.getElementById(`card-${id}`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 50);
+  }
+}
+
+function showTheme(key) {
+  document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+  event?.currentTarget?.classList.add('active');
+
+  const content = document.getElementById('content');
+
+  if (key === 'overview') {
+    document.querySelectorAll('.theme-btn')[0].classList.add('active');
+    const criticalPath = [
+      {id: 'me1', label: 'Perf Alerts'},
+      {id: 'au2', label: 'Segments'},
+      {id: 'ma2', label: 'Attribution'},
+      {id: 'in3', label: 'Trends'},
+      {id: 'au4', label: 'Dynamic Audiences'},
+      {id: 'co4', label: 'Content Calendar'},
+      {id: 'me4', label: 'Predictive Bids'},
+      {id: 'in5', label: 'Auto Insights'},
+      {id: 'me5', label: 'Autonomous Media'}
+    ];
+
+    content.innerHTML = `
+      <div class="section-title">Dependency Overview</div>
+      <div class="section-subtitle">Select a theme to explore · Click any card to see connections</div>
+      
+      <div class="critical-path">
+        <div class="cp-title">⬡ Critical Path to AI Embedded</div>
+        <div class="cp-flow">
+          ${criticalPath.map((n, i) => `
+            <span class="cp-node" onclick="jumpTo('${n.id}')">${n.label}</span>
+            ${i < criticalPath.length - 1 ? '<span class="cp-arrow">→</span>' : ''}
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="overview-grid">
+        ${Object.entries(themes).map(([key, t]) => {
+          const avgDeps = (t.useCases.reduce((s, uc) => s + uc.needs.length, 0) / 5).toFixed(1);
+          const hardCount = t.useCases.filter(uc => uc.level >= 4).length;
+          return `
+            <div class="overview-card" onclick="showThemeFromOverview('${key}')">
+              <div class="ov-num">${t.num}</div>
+              <div class="ov-title">${t.name}</div>
+              <div class="ov-bar"><div class="ov-bar-fill" style="width:${hardCount * 20}%"></div></div>
+              <div class="ov-stats">
+                <span class="ov-stat">Avg deps: ${avgDeps}</span>
+                <span class="ov-stat">Hard use cases: ${hardCount}/5</span>
+              </div>
+            </div>`;
+        }).join('')}
+      </div>
+    `;
+    return;
+  }
+
+  const theme = themes[key];
+  if (!theme) return;
+
+  content.innerHTML = `
+    <div class="section-title">${theme.num}. ${theme.name}</div>
+    <div class="section-subtitle">Click a card to highlight dependencies · Click dep tags to jump</div>
+    <div class="use-case-grid">
+      ${theme.useCases.map(uc => renderCard(uc)).join('')}
+    </div>
+  `;
+}
+
+function showThemeFromOverview(key) {
+  // find the button
+  const btns = document.querySelectorAll('.theme-btn');
+  const themeKeys = ['overview', 'creative', 'audience', 'content', 'media', 'insights', 'distribution', 'measurement', 'journey'];
+  const idx = themeKeys.indexOf(key);
+  if (idx >= 0) {
+    // simulate click
+    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+    btns[idx].classList.add('active');
+  }
+  showTheme(key);
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => showTheme('overview'));
+showTheme('overview');
+</script>
+</body>
+</html>
