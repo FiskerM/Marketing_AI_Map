@@ -1,525 +1,918 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Use Case Explorer</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Use Case Explorer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-*{margin:0;padding:0;box-sizing:border-box;}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-:root{
-  --bg:       #f7f5f1;
-  --white:    #ffffff;
-  --sand:     #C8BC9E;
-  --sandBg:   #ede8df;
-  --border:   #e0d8cc;
-  --navy:     #1C2D5E;
-  --navyDark: #14234A;
-  --orange:   #E07B30;
-  --purple:   #6B3FA0;
-  --mid:      #4A5568;
-  --muted:    #8A9BB0;
-  --text:     #1a1a2e;
-}
+    :root {
+      --bg: #f7f5f1;
+      --white: #ffffff;
+      --sand: #C8BC9E;
+      --sandBg: #ede8df;
+      --border: #e0d8cc;
+      --navy: #1C2D5E;
+      --navyDark: #14234A;
+      --orange: #E07B30;
+      --purple: #6B3FA0;
+      --mid: #4A5568;
+      --muted: #8A9BB0;
+      --text: #1a1a2e;
+    }
 
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Inter',sans-serif;
-  min-height:100vh;
-  display:grid;
-  grid-template-rows:auto auto 1fr;
-  overflow:hidden;
-  height:100vh;
-}
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      overflow: hidden;
+      height: 100vh;
+    }
 
-/* ── HEADER ── */
-.header{
-  padding:14px 24px;
-  background:var(--white);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;
-}
-.header-left h1{font-size:15px;font-weight:800;color:var(--navy);}
-.header-left p{font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:2px;}
+    /* ── HEADER ── */
+    .header {
+      padding: 14px 24px;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
 
-/* ── LEGEND ── */
-.legend{
-  display:flex;gap:20px;padding:8px 24px;
-  background:var(--sandBg);border-bottom:1px solid var(--border);
-  flex-shrink:0;flex-wrap:wrap;align-items:center;
-}
-.legend-item{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--mid);font-weight:500;}
-.legend-badge{
-  font-size:8px;font-weight:700;padding:2px 7px;border-radius:10px;letter-spacing:.05em;
-}
-.leg-foundation{background:rgba(28,45,94,.1);color:var(--navy);}
-.leg-growth{background:rgba(224,123,48,.12);color:var(--orange);}
-.leg-embedded{background:rgba(107,63,160,.12);color:var(--purple);}
-.legend-dep{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--mid);}
-.legend-dot{width:8px;height:8px;border-radius:50%;}
+    .header-left h1 {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--navy);
+    }
 
-/* ── MAIN LAYOUT ── */
-.main{
-  display:grid;
-  grid-template-columns:200px 1fr;
-  overflow:hidden;
-  min-height:0;
-}
+    .header-left p {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
 
-/* ── SIDEBAR ── */
-.sidebar{
-  background:var(--white);
-  border-right:1px solid var(--border);
-  overflow-y:auto;
-  padding:10px 0;
-}
-.sidebar-label{
-  font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--sand);padding:4px 16px 8px;
-}
-.theme-btn{
-  width:100%;padding:9px 16px;
-  background:none;border:none;border-left:3px solid transparent;
-  display:flex;align-items:center;gap:9px;
-  cursor:pointer;transition:all .18s;text-align:left;
-}
-.theme-btn:hover{background:rgba(28,45,94,.04);}
-.theme-btn.active{
-  background:rgba(28,45,94,.07);
-  border-left-color:var(--navy);
-}
-.theme-btn .t-num{
-  font-size:9px;font-weight:700;color:var(--sand);
-  font-family:monospace;min-width:18px;
-}
-.theme-btn.active .t-num{color:var(--navy);}
-.theme-btn .t-name{font-size:11px;font-weight:600;color:var(--mid);}
-.theme-btn.active .t-name{color:var(--navy);}
+    /* ── LEGEND ── */
+    .legend {
+      display: flex;
+      gap: 20px;
+      padding: 8px 24px;
+      background: var(--sandBg);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      align-items: center;
+    }
 
-/* ── CONTENT ── */
-.content{
-  overflow-y:auto;
-  padding:24px;
-  background:var(--bg);
-}
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: var(--mid);
+      font-weight: 500;
+    }
 
-.section-header{margin-bottom:20px;}
-.section-num{
-  font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--orange);margin-bottom:4px;
-}
-.section-title{font-size:20px;font-weight:800;color:var(--navy);margin-bottom:4px;}
-.section-goal{font-size:12px;color:var(--mid);max-width:600px;line-height:1.6;}
+    .legend-badge {
+      font-size: 8px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 10px;
+      letter-spacing: .05em;
+    }
 
-/* Critical path — staged */
-.crit-path{
-  background:var(--white);border:1px solid var(--border);border-radius:8px;
-  padding:18px 20px;margin-bottom:20px;
-}
-.cp-label{
-  font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--orange);margin-bottom:14px;
-}
-.cp-stages{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
-.cp-stage{display:flex;flex-direction:column;gap:0;}
-.cp-stage-header{
-  background:var(--navy);color:#fff;
-  border-radius:6px 6px 0 0;
-  padding:7px 10px;
-}
-.cp-stage-num{
-  font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-  color:rgba(255,255,255,.5);margin-bottom:2px;
-}
-.cp-stage-title{font-size:11px;font-weight:700;color:#fff;line-height:1.3;}
-.cp-stage-timing{
-  font-size:9px;color:rgba(255,255,255,.45);margin-top:3px;font-weight:500;
-}
-.cp-nodes{
-  border:1px solid var(--border);border-top:none;
-  border-radius:0 0 6px 6px;
-  padding:8px;display:flex;flex-direction:column;gap:5px;
-  background:var(--bg);flex:1;
-}
-.cp-node{
-  background:var(--white);border:1px solid var(--border);
-  border-left:3px solid var(--navy);
-  border-radius:0 4px 4px 0;
-  padding:5px 8px;font-size:10px;font-weight:600;
-  color:var(--navy);cursor:pointer;transition:all .15s;line-height:1.3;
-}
-.cp-node:hover{background:rgba(28,45,94,.05);border-color:var(--navy);}
-.cp-node .cp-theme{font-size:8.5px;font-weight:400;color:var(--muted);margin-top:1px;}
-.cp-connector{
-  display:flex;align-items:center;justify-content:center;
-  color:var(--sand);font-size:18px;flex-shrink:0;padding-top:28px;
-}
+    .leg-foundation {
+      background: rgba(28, 45, 94, .1);
+      color: var(--navy);
+    }
 
-/* Overview cards */
-.overview-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:12px;margin-bottom:24px;
-}
-.overview-card{
-  background:var(--white);border:1px solid var(--border);border-radius:8px;
-  padding:14px;cursor:pointer;transition:all .2s;
-}
-.overview-card:hover{border-color:var(--navy);transform:translateY(-2px);box-shadow:0 4px 12px rgba(28,45,94,.08);}
-.ov-num{font-size:9px;font-weight:700;color:var(--orange);letter-spacing:.1em;margin-bottom:4px;}
-.ov-name{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px;}
-.ov-bar{height:3px;background:var(--border);border-radius:2px;}
-.ov-bar-fill{height:100%;border-radius:2px;background:var(--navy);transition:width .4s;}
-.ov-stats{display:flex;justify-content:space-between;margin-top:5px;}
-.ov-stat{font-size:9px;color:var(--muted);}
+    .leg-growth {
+      background: rgba(224, 123, 48, .12);
+      color: var(--orange);
+    }
 
-/* UC cards */
-.uc-grid{display:grid;gap:10px;}
+    .leg-embedded {
+      background: rgba(107, 63, 160, .12);
+      color: var(--purple);
+    }
 
-.uc-card{
-  background:var(--white);
-  border:1px solid var(--border);
-  border-left:4px solid var(--border);
-  border-radius:0 8px 8px 0;
-  padding:14px 16px;
-  cursor:pointer;transition:all .2s;
-  position:relative;
-}
-.uc-card:hover{border-color:var(--navy);border-left-color:var(--navy);box-shadow:0 2px 8px rgba(28,45,94,.07);}
-.uc-card.highlighted{border-color:var(--navy);border-left-color:var(--navy);background:rgba(28,45,94,.03);}
-.uc-card.dep-needs{border-color:#E07B30;border-left-color:#E07B30;background:rgba(224,123,48,.04);}
-.uc-card.dep-enables{border-color:#00A078;border-left-color:#00A078;background:rgba(0,160,120,.04);}
+    .legend-dep {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      color: var(--mid);
+    }
 
-.uc-card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.level-badge{
-  font-size:8px;font-weight:700;padding:2px 8px;border-radius:10px;
-  letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;flex-shrink:0;
-}
-.lvl-FOUNDATION{background:rgba(28,45,94,.1);color:var(--navy);}
-.lvl-GROWTH{background:rgba(224,123,48,.12);color:var(--orange);}
-.lvl-EMBEDDED{background:rgba(107,63,160,.12);color:var(--purple);}
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
 
-.uc-title{font-size:13px;font-weight:700;color:var(--navy);}
+    /* ── MAIN LAYOUT ── */
+    .main {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      overflow: hidden;
+      min-height: 0;
+    }
 
-.uc-desc{
-  font-size:11.5px;color:var(--mid);line-height:1.6;
-  max-height:0;overflow:hidden;transition:max-height .3s ease;
-}
-.uc-card.open .uc-desc{max-height:200px;}
+    /* ── SIDEBAR ── */
+    .sidebar {
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 10px 0;
+    }
 
-.uc-deps{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
-.dep-tag{
-  font-size:9.5px;padding:2px 8px;border-radius:4px;
-  background:rgba(28,45,94,.07);color:var(--navy);
-  border:1px solid rgba(28,45,94,.15);
-  cursor:pointer;font-weight:500;transition:all .15s;
-}
-.dep-tag:hover{background:rgba(28,45,94,.14);}
+    .sidebar-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--sand);
+      padding: 4px 16px 8px;
+    }
 
-.uc-detail{
-  margin-top:10px;padding-top:10px;
-  border-top:1px solid var(--border);
-  display:none;
-}
-.uc-card.open .uc-detail{display:block;}
+    .theme-btn {
+      width: 100%;
+      padding: 9px 16px;
+      background: none;
+      border: none;
+      border-left: 3px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+      transition: all .18s;
+      text-align: left;
+    }
 
-.detail-section{margin-top:8px;}
-.detail-label{
-  font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  margin-bottom:5px;
-}
-.detail-label.needs{color:var(--orange);}
-.detail-label.enables{color:#00A078;}
-.detail-item{
-  font-size:11px;color:var(--mid);padding:3px 0;
-  display:flex;align-items:center;gap:6px;
-}
-.detail-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-</style>
+    .theme-btn:hover {
+      background: rgba(28, 45, 94, .04);
+    }
+
+    .theme-btn.active {
+      background: rgba(28, 45, 94, .07);
+      border-left-color: var(--navy);
+    }
+
+    .theme-btn .t-num {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--sand);
+      font-family: monospace;
+      min-width: 18px;
+    }
+
+    .theme-btn.active .t-num {
+      color: var(--navy);
+    }
+
+    .theme-btn .t-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--mid);
+    }
+
+    .theme-btn.active .t-name {
+      color: var(--navy);
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      overflow-y: auto;
+      padding: 24px;
+      background: var(--bg);
+    }
+
+    .section-header {
+      margin-bottom: 20px;
+    }
+
+    .section-num {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 4px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .section-goal {
+      font-size: 12px;
+      color: var(--mid);
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    /* Critical path — staged */
+    .crit-path {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+    }
+
+    .cp-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 14px;
+    }
+
+    .cp-stages {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .cp-stage {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .cp-stage-header {
+      background: var(--navy);
+      color: #fff;
+      border-radius: 6px 6px 0 0;
+      padding: 7px 10px;
+    }
+
+    .cp-stage-num {
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .5);
+      margin-bottom: 2px;
+    }
+
+    .cp-stage-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+    }
+
+    .cp-stage-timing {
+      font-size: 9px;
+      color: rgba(255, 255, 255, .45);
+      margin-top: 3px;
+      font-weight: 500;
+    }
+
+    .cp-nodes {
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      background: var(--bg);
+      flex: 1;
+    }
+
+    .cp-node {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--navy);
+      border-radius: 0 4px 4px 0;
+      padding: 5px 8px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--navy);
+      cursor: pointer;
+      transition: all .15s;
+      line-height: 1.3;
+    }
+
+    .cp-node:hover {
+      background: rgba(28, 45, 94, .05);
+      border-color: var(--navy);
+    }
+
+    .cp-node .cp-theme {
+      font-size: 8.5px;
+      font-weight: 400;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .cp-connector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--sand);
+      font-size: 18px;
+      flex-shrink: 0;
+      padding-top: 28px;
+    }
+
+    /* Overview cards */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .overview-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .overview-card:hover {
+      border-color: var(--navy);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(28, 45, 94, .08);
+    }
+
+    .ov-num {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: .1em;
+      margin-bottom: 4px;
+    }
+
+    .ov-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .ov-bar {
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+    }
+
+    .ov-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--navy);
+      transition: width .4s;
+    }
+
+    .ov-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+    }
+
+    .ov-stat {
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    /* UC cards */
+    .uc-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .uc-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--border);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+    }
+
+    .uc-card:hover {
+      border-color: var(--navy);
+      border-left-color: var(--navy);
+      box-shadow: 0 2px 8px rgba(28, 45, 94, .07);
+    }
+
+    .uc-card.highlighted {
+      border-color: var(--navy);
+      border-left-color: var(--navy);
+      background: rgba(28, 45, 94, .03);
+    }
+
+    .uc-card.dep-needs {
+      border-color: #E07B30;
+      border-left-color: #E07B30;
+      background: rgba(224, 123, 48, .04);
+    }
+
+    .uc-card.dep-enables {
+      border-color: #00A078;
+      border-left-color: #00A078;
+      background: rgba(0, 160, 120, .04);
+    }
+
+    .uc-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .level-badge {
+      font-size: 8px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .lvl-FOUNDATION {
+      background: rgba(28, 45, 94, .1);
+      color: var(--navy);
+    }
+
+    .lvl-GROWTH {
+      background: rgba(224, 123, 48, .12);
+      color: var(--orange);
+    }
+
+    .lvl-EMBEDDED {
+      background: rgba(107, 63, 160, .12);
+      color: var(--purple);
+    }
+
+    .uc-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .uc-desc {
+      font-size: 11.5px;
+      color: var(--mid);
+      line-height: 1.6;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .3s ease;
+    }
+
+    .uc-card.open .uc-desc {
+      max-height: 200px;
+    }
+
+    .uc-deps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 8px;
+    }
+
+    .dep-tag {
+      font-size: 9.5px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(28, 45, 94, .07);
+      color: var(--navy);
+      border: 1px solid rgba(28, 45, 94, .15);
+      cursor: pointer;
+      font-weight: 500;
+      transition: all .15s;
+    }
+
+    .dep-tag:hover {
+      background: rgba(28, 45, 94, .14);
+    }
+
+    .uc-detail {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      display: none;
+    }
+
+    .uc-card.open .uc-detail {
+      display: block;
+    }
+
+    .detail-section {
+      margin-top: 8px;
+    }
+
+    .detail-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .detail-label.needs {
+      color: var(--orange);
+    }
+
+    .detail-label.enables {
+      color: #00A078;
+    }
+
+    .detail-item {
+      font-size: 11px;
+      color: var(--mid);
+      padding: 3px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .detail-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="header">
-  <div class="header-left">
-    <h1>AI Use Case Explorer</h1>
-    <p>36 use cases · 8 themes · click to explore dependencies</p>
+  <div class="header">
+    <div class="header-left">
+      <h1>AI Use Case Explorer</h1>
+      <p>36 use cases · 8 themes · click to explore dependencies</p>
+    </div>
   </div>
-</div>
 
-<div class="legend">
-  <span class="legend-item"><span class="legend-badge leg-foundation">Foundation</span> Start here</span>
-  <span class="legend-item"><span class="legend-badge leg-growth">Growth</span> Requires basics</span>
-  <span class="legend-item"><span class="legend-badge leg-embedded">Embedded</span> Full AI operation</span>
-  <span style="margin-left:8px;width:1px;height:14px;background:var(--border);"></span>
-  <span class="legend-dep"><span class="legend-dot" style="background:#E07B30"></span> Needs first</span>
-  <span class="legend-dep"><span class="legend-dot" style="background:#00A078"></span> Unlocks</span>
-</div>
+  <div class="legend">
+    <span class="legend-item"><span class="legend-badge leg-foundation">Foundation</span> Start here</span>
+    <span class="legend-item"><span class="legend-badge leg-growth">Growth</span> Requires basics</span>
+    <span class="legend-item"><span class="legend-badge leg-embedded">Embedded</span> Full AI operation</span>
+    <span style="margin-left:8px;width:1px;height:14px;background:var(--border);"></span>
+    <span class="legend-dep"><span class="legend-dot" style="background:#E07B30"></span> Needs first</span>
+    <span class="legend-dep"><span class="legend-dot" style="background:#00A078"></span> Unlocks</span>
+  </div>
 
-<div class="main">
-  <div class="sidebar" id="sidebar"></div>
-  <div class="content" id="content"></div>
-</div>
+  <div class="main">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="content" id="content"></div>
+  </div>
 
-<script>
-const THEMES = [
-  {
-    id:'creative', name:'Creative', num:'01', color:'#2563EB',
-    goal:'Produce more, test faster, maintain brand consistency without growing team.',
-    useCases:[
-      {id:'cr1',level:'FOUNDATION',name:'AI copy & creative generation',
-       desc:'Turn briefs into multiple variants across formats. Brand voice codification as first step. Team directs and selects rather than writes from scratch. Output doubles without headcount change.',
-       needs:[],enables:['cr2','cr3','co1']},
-      {id:'cr2',level:'GROWTH',name:'Asset localisation at scale',
-       desc:'One approved concept adapts automatically across markets, formats, channels, and segments within brand guardrails. Weeks become hours.',
-       needs:['cr1'],enables:['cr3','me1']},
-      {id:'cr3',level:'GROWTH',name:'Cultural reactive creative engine',
-       desc:'AI monitors cultural signals in real time, detects relevant moments, and generates draft reactive creative for fast-track approval. Hours, not weeks.',
-       needs:['cr1','in2'],enables:['cr4']},
-      {id:'cr4',level:'EMBEDDED',name:'Autonomous creative testing loop',
-       desc:'Generates variants, deploys to live campaigns, monitors performance, identifies winning patterns, and produces the next generation without a human brief. Performance signal becomes the brief.',
-       needs:['cr2','cr3','me3','in1'],enables:[]},
-    ]
-  },
-  {
-    id:'audience', name:'Audience', num:'02', color:'#7C3AED',
-    goal:'Know exactly who to target, why, and when — and keep that knowledge current automatically.',
-    useCases:[
-      {id:'au1',level:'FOUNDATION',name:'Segmentation & lookalike generation',
-       desc:'Build meaningful segments beyond demographics from existing data. Use best segments as seeds for lookalike profiles. Turns a flat list into a structured audience architecture.',
-       needs:[],enables:['au2','au3','me1']},
-      {id:'au2',level:'GROWTH',name:'Dynamic refresh & churn prediction',
-       desc:'AI monitors behavioural signals continuously, updates segments in real time, and flags at-risk customers before they churn. Team works from a living model, not static lists.',
-       needs:['au1','in1'],enables:['au3','au4','cj3']},
-      {id:'au3',level:'GROWTH',name:'Emerging segment detection',
-       desc:'AI scans data and market signals to identify net-new audience opportunities — micro-segments forming before they become obvious.',
-       needs:['au1','in2'],enables:['au4','me3']},
-      {id:'au4',level:'EMBEDDED',name:'Autonomous audience orchestration',
-       desc:'AI manages the complete audience lifecycle — building, refreshing, scoring intent, suppressing the wrong people, routing the right people. Humans set strategy only.',
-       needs:['au2','au3','me2'],enables:['me5','cj4']},
-    ]
-  },
-  {
-    id:'content', name:'Content', num:'03', color:'#DB2777',
-    goal:'Produce more, distribute smarter, stay relevant — without scaling headcount.',
-    useCases:[
-      {id:'co1',level:'FOUNDATION',name:'AI-assisted creation & editing',
-       desc:'Turn briefs into first drafts across formats. AI as editor is now the #1 content AI use case. Team directs, refines, approves. Output doubles without headcount change.',
-       needs:[],enables:['co2','co3']},
-      {id:'co2',level:'GROWTH',name:'Systematic repurposing engine',
-       desc:'One asset becomes 15–20 derivatives — social variants, email sequences, scripts, ad copy — each tailored by segment and funnel stage. Extract full value from what you have.',
-       needs:['co1'],enables:['co3','co4']},
-      {id:'co3',level:'GROWTH',name:'SEO & content gap intelligence',
-       desc:'AI analyses search intent, competitor content, and keyword gaps to generate prioritised briefs. Every new piece is built to rank and earn traffic, not just to exist.',
-       needs:['co1','in2'],enables:['co4']},
-      {id:'co4',level:'EMBEDDED',name:'Autonomous content operations loop',
-       desc:'AI monitors performance and search signals, identifies gaps, generates briefs, produces drafts, optimises for SEO, schedules, and feeds learnings back into the next cycle.',
-       needs:['co2','co3','in1'],enables:[]},
-    ]
-  },
-  {
-    id:'media', name:'Media & Performance', num:'04', color:'#D97706',
-    goal:'Spend the right amount, in the right places, with creative that adapts — and know what\'s actually working.',
-    useCases:[
-      {id:'me1',level:'FOUNDATION',name:'AI campaign setup & targeting',
-       desc:'Build structured campaign architecture — audiences, bidding, creative variations, channel mix — from a brief. Team validates rather than builds from scratch.',
-       needs:['au1'],enables:['me3','me4']},
-      {id:'me2',level:'FOUNDATION',name:'Attribution Model',
-       desc:'Before any optimisation, align the team on what success looks like. AI helps define north star KPIs, build a unified attribution model across channels, and establish the measurement baseline everything else is built on. Teams that skip this optimise for the wrong thing — faster.',
-       needs:[],enables:['me3','in3','au4']},
-      {id:'me3',level:'GROWTH',name:'Real-time bid & budget optimisation',
-       desc:'AI adjusts bids, budgets, and targeting mid-flight — shifting spend toward what\'s working before the next human review cycle. Weekly optimisation reviews become obsolete.',
-       needs:['me1','me2'],enables:['me4','me5','cr4']},
-      {id:'me4',level:'GROWTH',name:'Dynamic creative optimisation (DCO)',
-       desc:'AI generates and serves the best-performing combination of headline, visual, CTA, and offer for each audience and context in real time. Ends one-creative-for-all.',
-       needs:['me1','au2'],enables:['me5']},
-      {id:'me5',level:'EMBEDDED',name:'Autonomous media agent',
-       desc:'AI manages the complete campaign lifecycle — planning, buying, optimising, reallocating budget, rotating creative — within guardrails. Live pilots show 90% reduction in manual time and 34% CTR lift.',
-       needs:['me3','me4','au4'],enables:[]},
-    ]
-  },
-  {
-    id:'insights', name:'Insights & Intelligence', num:'05', color:'#059669',
-    goal:'Move from reporting what happened to knowing what to do next — before the team asks.',
-    useCases:[
-      {id:'in1',level:'FOUNDATION',name:'Automated reporting & dashboards',
-       desc:'AI ingests data from all channels and produces unified performance summaries automatically. Reporting stops being a bottleneck.',
-       needs:['me2'],enables:['in2','au2','cj1']},
-      {id:'in2',level:'FOUNDATION',name:'Competitive & market monitoring',
-       desc:'AI continuously monitors competitor activity, industry news, search trends, and market shifts. Teams receive structured briefings instead of doing manual sweeps.',
-       needs:[],enables:['in3','cr3','co3','au3']},
-      {id:'in3',level:'GROWTH',name:'AI attribution & incrementality',
-       desc:'Move beyond rules-based attribution to AI models that evaluate actual incremental impact — including modelled conversions where privacy restricts direct measurement.',
-       needs:['me2','in1'],enables:['in4','me4']},
-      {id:'in4',level:'GROWTH',name:'Predictive performance modelling',
-       desc:'AI forecasts campaign performance before launch, simulating how budget allocations, creative strategies, and audience mixes are likely to perform.',
-       needs:['in1','in3'],enables:['in5','me5']},
-      {id:'in5',level:'EMBEDDED',name:'Autonomous insight generation',
-       desc:'AI monitors the full data environment, identifies significant patterns, connects signals across sources, and generates proactive strategic briefings. Team reviews hypotheses, not raw data.',
-       needs:['in3','in4'],enables:['cr4','co4']},
-    ]
-  },
-  {
-    id:'journey', name:'Customer Journey', num:'06', color:'#0891B2',
-    goal:'Every customer gets the right experience at the right moment — without manual management of each path.',
-    useCases:[
-      {id:'cj1',level:'FOUNDATION',name:'Journey mapping & friction detection',
-       desc:'AI analyses interaction logs and conversion paths to identify where customers drop off or disengage. Turns invisible friction into a prioritised fix list.',
-       needs:['in1'],enables:['cj2','cj3']},
-      {id:'cj2',level:'FOUNDATION',name:'Conversational AI & intelligent routing',
-       desc:'AI-driven chat handles common queries, qualifies intent, and routes complex cases instantly. One implementation automated 93% of inquiries and cut per-ticket cost from $40 to $8.',
-       needs:[],enables:['cj3','cj4']},
-      {id:'cj3',level:'GROWTH',name:'Real-time personalisation & next best action',
-       desc:'AI analyses signals and history to determine the optimal next interaction — offer, content, channel, timing — for each individual. Replaces static if/then rules.',
-       needs:['cj1','cj2','au2'],enables:['cj4']},
-      {id:'cj4',level:'EMBEDDED',name:'Autonomous journey orchestration',
-       desc:'AI manages the full experience lifecycle — detecting intent, adapting journeys mid-flight, suppressing irrelevant comms, escalating complex cases. One telco matched the market leader\'s NPS.',
-       needs:['cj3','au4'],enables:[]},
-    ]
-  },
-  {
-    id:'operations', name:'Operations & Workflow', num:'07', color:'#BE185D',
-    goal:'Do the same work in less time without burning out or hiring.',
-    useCases:[
-      {id:'op1',level:'FOUNDATION',name:'AI-assisted briefing',
-       desc:'Turn rough notes or conversations into complete structured briefs — creative, campaign, project. Eliminates the blank page problem instantly.',
-       needs:[],enables:['op2','op3','cr1','co1']},
-      {id:'op2',level:'FOUNDATION',name:'Prompt library & onboarding kit',
-       desc:'Shared, curated library of tested prompts for common tasks. Highest-leverage day-one implementation. Team produces from day one.',
-       needs:['op1'],enables:['op3','kl1','kl2']},
-      {id:'op3',level:'GROWTH',name:'Campaign intake & scoping',
-       desc:'Auto-triage, scope, effort-estimate, and schedule new requests against team capacity. Creates structured workflow data that feeds Embedded systems.',
-       needs:['op1','op2'],enables:['op4','op5']},
-      {id:'op4',level:'GROWTH',name:'Governance & guardrail design',
-       desc:'Define approval thresholds, escalation triggers, brand safety boundaries, and decision frameworks before autonomous operation begins. Prerequisite for all Embedded use cases.',
-       needs:['op3'],enables:['op5','op6','me5','au4']},
-      {id:'op5',level:'EMBEDDED',name:'Autonomous anomaly detection & response',
-       desc:'Monitors performance, budgets, and market signals. Detects anomalies, diagnoses cause, executes response within guardrails, and logs reasoning. Team reviews decisions, not data.',
-       needs:['op4','in1','me2'],enables:['op6']},
-      {id:'op6',level:'EMBEDDED',name:'Listener-driven multi-agent network',
-       desc:'Specialised agents coordinated by an orchestrator. Listener agent monitors calls, Slack, and meetings — detects themes, auto-generates briefs, routes to domain agents.',
-       needs:['op4','op5','kl3'],enables:[]},
-    ]
-  },
-  {
-    id:'knowledge', name:'Knowledge & Learning', num:'08', color:'#047857',
-    goal:'Every team member has instant access to the organisation\'s best thinking — institutional knowledge doesn\'t walk out the door.',
-    useCases:[
-      {id:'kl1',level:'FOUNDATION',name:'AI knowledge base & team assistant',
-       desc:'Conversational AI layer over documents, briefs, history, guidelines, and SOPs. Natural language answers in seconds. Average worker spends 8.2 hrs/week searching — this recovers most of it.',
-       needs:[],enables:['kl2','kl3','op2']},
-      {id:'kl2',level:'FOUNDATION',name:'AI-accelerated onboarding',
-       desc:'New team members guided through organisational knowledge, processes, and campaign history by AI adapted to their role. Weeks of tribal knowledge transfer happen in days.',
-       needs:['kl1'],enables:['kl3']},
-      {id:'kl3',level:'GROWTH',name:'Insight capture & institutional memory',
-       desc:'AI actively captures knowledge from post-mortems, client calls, and research — synthesises findings, tags patterns, makes them searchable. Turnover knowledge loss costs up to 213% of salary.',
-       needs:['kl1','kl2'],enables:['kl4','op6']},
-      {id:'kl4',level:'EMBEDDED',name:'Self-updating intelligence layer',
-       desc:'The knowledge system ingests new campaigns, research, and performance data continuously — updating its own base and surfacing newly relevant insights to the right people automatically.',
-       needs:['kl3','in5'],enables:[]},
-    ]
-  },
-];
-
-// Fast lookups
-const ucById={}, themeByUcId={}, themeById={};
-THEMES.forEach(t=>{
-  themeById[t.id]=t;
-  t.useCases.forEach(uc=>{ucById[uc.id]=uc; themeByUcId[uc.id]=t;});
-});
-
-// ── BUILD SIDEBAR ──────────────────────────────────────────────
-const sidebar = document.getElementById('sidebar');
-const sLabel = document.createElement('div');
-sLabel.className='sidebar-label'; sLabel.textContent='Themes';
-sidebar.appendChild(sLabel);
-
-// Overview button
-const ovBtn = document.createElement('button');
-ovBtn.className='theme-btn active';
-ovBtn.id='btn-overview';
-ovBtn.innerHTML=`<span class="t-num">⬡</span><span class="t-name">Overview</span>`;
-ovBtn.onclick=()=>showTheme('overview');
-sidebar.appendChild(ovBtn);
-
-THEMES.forEach(t=>{
-  const btn=document.createElement('button');
-  btn.className='theme-btn'; btn.id=`btn-${t.id}`;
-  btn.innerHTML=`<span class="t-num">•</span><span class="t-name">${t.name}</span>`;
-  btn.onclick=()=>showTheme(t.id);
-  sidebar.appendChild(btn);
-});
-
-// ── RENDER ─────────────────────────────────────────────────────
-function setActiveBtn(id){
-  document.querySelectorAll('.theme-btn').forEach(b=>b.classList.remove('active'));
-  const target = document.getElementById(`btn-${id}`) || document.getElementById('btn-overview');
-  if(target) target.classList.add('active');
-}
-
-function showTheme(key){
-  setActiveBtn(key);
-  const content=document.getElementById('content');
-
-  if(key==='overview'){
-    const stages=[
+  <script>
+    const THEMES = [
       {
-        num:'Stage 1', title:'Foundation', timing:'Weeks 1–4',
-        nodes:[
-          {id:'me2',label:'Attribution Model',theme:'Media'},
-          {id:'op1',label:'AI-assisted briefing',theme:'Operations'},
-          {id:'op2',label:'Prompt library',theme:'Operations'},
-          {id:'kl1',label:'Knowledge base',theme:'Knowledge'},
+        id: 'creative', name: 'Creative', num: '01', color: '#2563EB',
+        goal: 'Produce more, test faster, maintain brand consistency without growing team.',
+        useCases: [
+          {
+            id: 'cr1', level: 'FOUNDATION', name: 'AI copy & creative generation',
+            desc: 'Turn briefs into multiple variants across formats. Brand voice codification as first step. Team directs and selects rather than writes from scratch. Output doubles without headcount change.',
+            needs: [], enables: ['cr2', 'cr3', 'co1']
+          },
+          {
+            id: 'cr2', level: 'GROWTH', name: 'Asset localisation at scale',
+            desc: 'One approved concept adapts automatically across markets, formats, channels, and segments within brand guardrails. Weeks become hours.',
+            needs: ['cr1'], enables: ['cr3', 'me1']
+          },
+          {
+            id: 'cr3', level: 'GROWTH', name: 'Cultural reactive creative engine',
+            desc: 'AI monitors cultural signals in real time, detects relevant moments, and generates draft reactive creative for fast-track approval. Hours, not weeks.',
+            needs: ['cr1', 'in2'], enables: ['cr4']
+          },
+          {
+            id: 'cr4', level: 'EMBEDDED', name: 'Autonomous creative testing loop',
+            desc: 'Generates variants, deploys to live campaigns, monitors performance, identifies winning patterns, and produces the next generation without a human brief. Performance signal becomes the brief.',
+            needs: ['cr2', 'cr3', 'me3', 'in1'], enables: []
+          },
         ]
       },
       {
-        num:'Stage 2', title:'Data Layer', timing:'Weeks 4–10',
-        nodes:[
-          {id:'au1',label:'Segmentation & lookalike',theme:'Audience'},
-          {id:'in2',label:'Competitive monitoring',theme:'Insights'},
-          {id:'in1',label:'Automated reporting',theme:'Insights'},
-          {id:'cr1',label:'Creative generation',theme:'Creative'},
-          {id:'co1',label:'Content creation',theme:'Content'},
+        id: 'audience', name: 'Audience', num: '02', color: '#7C3AED',
+        goal: 'Know exactly who to target, why, and when — and keep that knowledge current automatically.',
+        useCases: [
+          {
+            id: 'au1', level: 'FOUNDATION', name: 'Segmentation & lookalike generation',
+            desc: 'Build meaningful segments beyond demographics from existing data. Use best segments as seeds for lookalike profiles. Turns a flat list into a structured audience architecture.',
+            needs: [], enables: ['au2', 'au3', 'me1']
+          },
+          {
+            id: 'au2', level: 'GROWTH', name: 'Dynamic refresh & churn prediction',
+            desc: 'AI monitors behavioural signals continuously, updates segments in real time, and flags at-risk customers before they churn. Team works from a living model, not static lists.',
+            needs: ['au1', 'in1'], enables: ['au3', 'au4', 'cj3']
+          },
+          {
+            id: 'au3', level: 'GROWTH', name: 'Emerging segment detection',
+            desc: 'AI scans data and market signals to identify net-new audience opportunities — micro-segments forming before they become obvious.',
+            needs: ['au1', 'in2'], enables: ['au4', 'me3']
+          },
+          {
+            id: 'au4', level: 'EMBEDDED', name: 'Autonomous audience orchestration',
+            desc: 'AI manages the complete audience lifecycle — building, refreshing, scoring intent, suppressing the wrong people, routing the right people. Humans set strategy only.',
+            needs: ['au2', 'au3', 'me2'], enables: ['me5', 'cj4']
+          },
         ]
       },
       {
-        num:'Stage 3', title:'Optimise', timing:'Weeks 10–20',
-        nodes:[
-          {id:'me1',label:'Campaign setup',theme:'Media'},
-          {id:'me3',label:'Bid optimisation',theme:'Media'},
-          {id:'au2',label:'Dynamic audiences',theme:'Audience'},
-          {id:'co2',label:'Repurposing engine',theme:'Content'},
-          {id:'op3',label:'Campaign intake',theme:'Operations'},
-          {id:'kl2',label:'AI onboarding',theme:'Knowledge'},
+        id: 'content', name: 'Content', num: '03', color: '#DB2777',
+        goal: 'Produce more, distribute smarter, stay relevant — without scaling headcount.',
+        useCases: [
+          {
+            id: 'co1', level: 'FOUNDATION', name: 'AI-assisted creation & editing',
+            desc: 'Turn briefs into first drafts across formats. AI as editor is now the #1 content AI use case. Team directs, refines, approves. Output doubles without headcount change.',
+            needs: [], enables: ['co2', 'co3']
+          },
+          {
+            id: 'co2', level: 'GROWTH', name: 'Systematic repurposing engine',
+            desc: 'One asset becomes 15–20 derivatives — social variants, email sequences, scripts, ad copy — each tailored by segment and funnel stage. Extract full value from what you have.',
+            needs: ['co1'], enables: ['co3', 'co4']
+          },
+          {
+            id: 'co3', level: 'GROWTH', name: 'SEO & content gap intelligence',
+            desc: 'AI analyses search intent, competitor content, and keyword gaps to generate prioritised briefs. Every new piece is built to rank and earn traffic, not just to exist.',
+            needs: ['co1', 'in2'], enables: ['co4']
+          },
+          {
+            id: 'co4', level: 'EMBEDDED', name: 'Autonomous content operations loop',
+            desc: 'AI monitors performance and search signals, identifies gaps, generates briefs, produces drafts, optimises for SEO, schedules, and feeds learnings back into the next cycle.',
+            needs: ['co2', 'co3', 'in1'], enables: []
+          },
         ]
       },
       {
-        num:'Stage 4', title:'Connect', timing:'Weeks 20–35',
-        nodes:[
-          {id:'op4',label:'Governance design',theme:'Operations'},
-          {id:'in3',label:'Attribution & incrementality',theme:'Insights'},
-          {id:'in4',label:'Predictive modelling',theme:'Insights'},
-          {id:'cj1',label:'Journey mapping',theme:'Journey'},
-          {id:'cj2',label:'Conversational AI',theme:'Journey'},
-          {id:'kl3',label:'Institutional memory',theme:'Knowledge'},
+        id: 'media', name: 'Media & Performance', num: '04', color: '#D97706',
+        goal: 'Spend the right amount, in the right places, with creative that adapts — and know what\'s actually working.',
+        useCases: [
+          {
+            id: 'me1', level: 'FOUNDATION', name: 'AI campaign setup & targeting',
+            desc: 'Build structured campaign architecture — audiences, bidding, creative variations, channel mix — from a brief. Team validates rather than builds from scratch.',
+            needs: ['au1'], enables: ['me3', 'me4']
+          },
+          {
+            id: 'me2', level: 'FOUNDATION', name: 'Attribution Model',
+            desc: 'Before any optimisation, align the team on what success looks like. AI helps define north star KPIs, build a unified attribution model across channels, and establish the measurement baseline everything else is built on. Teams that skip this optimise for the wrong thing — faster.',
+            needs: [], enables: ['me3', 'in3', 'au4']
+          },
+          {
+            id: 'me3', level: 'GROWTH', name: 'Real-time bid & budget optimisation',
+            desc: 'AI adjusts bids, budgets, and targeting mid-flight — shifting spend toward what\'s working before the next human review cycle. Weekly optimisation reviews become obsolete.',
+            needs: ['me1', 'me2'], enables: ['me4', 'me5', 'cr4']
+          },
+          {
+            id: 'me4', level: 'GROWTH', name: 'Dynamic creative optimisation (DCO)',
+            desc: 'AI generates and serves the best-performing combination of headline, visual, CTA, and offer for each audience and context in real time. Ends one-creative-for-all.',
+            needs: ['me1', 'au2'], enables: ['me5']
+          },
+          {
+            id: 'me5', level: 'EMBEDDED', name: 'Autonomous media agent',
+            desc: 'AI manages the complete campaign lifecycle — planning, buying, optimising, reallocating budget, rotating creative — within guardrails. Live pilots show 90% reduction in manual time and 34% CTR lift.',
+            needs: ['me3', 'me4', 'au4'], enables: []
+          },
         ]
       },
       {
-        num:'Stage 5', title:'Autonomous', timing:'Weeks 35+',
-        nodes:[
-          {id:'me5',label:'Autonomous media',theme:'Media'},
-          {id:'au4',label:'Audience orchestration',theme:'Audience'},
-          {id:'cj4',label:'Journey orchestration',theme:'Journey'},
-          {id:'in5',label:'Auto insights',theme:'Insights'},
-          {id:'op5',label:'Anomaly detection',theme:'Operations'},
-          {id:'op6',label:'Multi-agent network',theme:'Operations'},
+        id: 'insights', name: 'Insights & Intelligence', num: '05', color: '#059669',
+        goal: 'Move from reporting what happened to knowing what to do next — before the team asks.',
+        useCases: [
+          {
+            id: 'in1', level: 'FOUNDATION', name: 'Automated reporting & dashboards',
+            desc: 'AI ingests data from all channels and produces unified performance summaries automatically. Reporting stops being a bottleneck.',
+            needs: ['me2'], enables: ['in2', 'au2', 'cj1']
+          },
+          {
+            id: 'in2', level: 'FOUNDATION', name: 'Competitive & market monitoring',
+            desc: 'AI continuously monitors competitor activity, industry news, search trends, and market shifts. Teams receive structured briefings instead of doing manual sweeps.',
+            needs: [], enables: ['in3', 'cr3', 'co3', 'au3']
+          },
+          {
+            id: 'in3', level: 'GROWTH', name: 'AI attribution & incrementality',
+            desc: 'Move beyond rules-based attribution to AI models that evaluate actual incremental impact — including modelled conversions where privacy restricts direct measurement.',
+            needs: ['me2', 'in1'], enables: ['in4', 'me4']
+          },
+          {
+            id: 'in4', level: 'GROWTH', name: 'Predictive performance modelling',
+            desc: 'AI forecasts campaign performance before launch, simulating how budget allocations, creative strategies, and audience mixes are likely to perform.',
+            needs: ['in1', 'in3'], enables: ['in5', 'me5']
+          },
+          {
+            id: 'in5', level: 'EMBEDDED', name: 'Autonomous insight generation',
+            desc: 'AI monitors the full data environment, identifies significant patterns, connects signals across sources, and generates proactive strategic briefings. Team reviews hypotheses, not raw data.',
+            needs: ['in3', 'in4'], enables: ['cr4', 'co4']
+          },
+        ]
+      },
+      {
+        id: 'journey', name: 'Customer Journey', num: '06', color: '#0891B2',
+        goal: 'Every customer gets the right experience at the right moment — without manual management of each path.',
+        useCases: [
+          {
+            id: 'cj1', level: 'FOUNDATION', name: 'Journey mapping & friction detection',
+            desc: 'AI analyses interaction logs and conversion paths to identify where customers drop off or disengage. Turns invisible friction into a prioritised fix list.',
+            needs: ['in1'], enables: ['cj2', 'cj3']
+          },
+          {
+            id: 'cj2', level: 'FOUNDATION', name: 'Conversational AI & intelligent routing',
+            desc: 'AI-driven chat handles common queries, qualifies intent, and routes complex cases instantly. One implementation automated 93% of inquiries and cut per-ticket cost from $40 to $8.',
+            needs: [], enables: ['cj3', 'cj4']
+          },
+          {
+            id: 'cj3', level: 'GROWTH', name: 'Real-time personalisation & next best action',
+            desc: 'AI analyses signals and history to determine the optimal next interaction — offer, content, channel, timing — for each individual. Replaces static if/then rules.',
+            needs: ['cj1', 'cj2', 'au2'], enables: ['cj4']
+          },
+          {
+            id: 'cj4', level: 'EMBEDDED', name: 'Autonomous journey orchestration',
+            desc: 'AI manages the full experience lifecycle — detecting intent, adapting journeys mid-flight, suppressing irrelevant comms, escalating complex cases. One telco matched the market leader\'s NPS.',
+            needs: ['cj3', 'au4'], enables: []
+          },
+        ]
+      },
+      {
+        id: 'operations', name: 'Operations & Workflow', num: '07', color: '#BE185D',
+        goal: 'Do the same work in less time without burning out or hiring.',
+        useCases: [
+          {
+            id: 'op1', level: 'FOUNDATION', name: 'AI-assisted briefing',
+            desc: 'Turn rough notes or conversations into complete structured briefs — creative, campaign, project. Eliminates the blank page problem instantly.',
+            needs: [], enables: ['op2', 'op3', 'cr1', 'co1']
+          },
+          {
+            id: 'op2', level: 'FOUNDATION', name: 'Prompt library & onboarding kit',
+            desc: 'Shared, curated library of tested prompts for common tasks. Highest-leverage day-one implementation. Team produces from day one.',
+            needs: ['op1'], enables: ['op3', 'kl1', 'kl2']
+          },
+          {
+            id: 'op3', level: 'GROWTH', name: 'Campaign intake & scoping',
+            desc: 'Auto-triage, scope, effort-estimate, and schedule new requests against team capacity. Creates structured workflow data that feeds Embedded systems.',
+            needs: ['op1', 'op2'], enables: ['op4', 'op5']
+          },
+          {
+            id: 'op4', level: 'GROWTH', name: 'Governance & guardrail design',
+            desc: 'Define approval thresholds, escalation triggers, brand safety boundaries, and decision frameworks before autonomous operation begins. Prerequisite for all Embedded use cases.',
+            needs: ['op3'], enables: ['op5', 'op6', 'me5', 'au4']
+          },
+          {
+            id: 'op5', level: 'EMBEDDED', name: 'Autonomous anomaly detection & response',
+            desc: 'Monitors performance, budgets, and market signals. Detects anomalies, diagnoses cause, executes response within guardrails, and logs reasoning. Team reviews decisions, not data.',
+            needs: ['op4', 'in1', 'me2'], enables: ['op6']
+          },
+          {
+            id: 'op6', level: 'EMBEDDED', name: 'Listener-driven multi-agent network',
+            desc: 'Specialised agents coordinated by an orchestrator. Listener agent monitors calls, Slack, and meetings — detects themes, auto-generates briefs, routes to domain agents.',
+            needs: ['op4', 'op5', 'kl3'], enables: []
+          },
+        ]
+      },
+      {
+        id: 'knowledge', name: 'Knowledge & Learning', num: '08', color: '#047857',
+        goal: 'Every team member has instant access to the organisation\'s best thinking — institutional knowledge doesn\'t walk out the door.',
+        useCases: [
+          {
+            id: 'kl1', level: 'FOUNDATION', name: 'AI knowledge base & team assistant',
+            desc: 'Conversational AI layer over documents, briefs, history, guidelines, and SOPs. Natural language answers in seconds. Average worker spends 8.2 hrs/week searching — this recovers most of it.',
+            needs: [], enables: ['kl2', 'kl3', 'op2']
+          },
+          {
+            id: 'kl2', level: 'FOUNDATION', name: 'AI-accelerated onboarding',
+            desc: 'New team members guided through organisational knowledge, processes, and campaign history by AI adapted to their role. Weeks of tribal knowledge transfer happen in days.',
+            needs: ['kl1'], enables: ['kl3']
+          },
+          {
+            id: 'kl3', level: 'GROWTH', name: 'Insight capture & institutional memory',
+            desc: 'AI actively captures knowledge from post-mortems, client calls, and research — synthesises findings, tags patterns, makes them searchable. Turnover knowledge loss costs up to 213% of salary.',
+            needs: ['kl1', 'kl2'], enables: ['kl4', 'op6']
+          },
+          {
+            id: 'kl4', level: 'EMBEDDED', name: 'Self-updating intelligence layer',
+            desc: 'The knowledge system ingests new campaigns, research, and performance data continuously — updating its own base and surfacing newly relevant insights to the right people automatically.',
+            needs: ['kl3', 'in5'], enables: []
+          },
         ]
       },
     ];
-    content.innerHTML=`
+
+    // Fast lookups
+    const ucById = {}, themeByUcId = {}, themeById = {};
+    THEMES.forEach(t => {
+      themeById[t.id] = t;
+      t.useCases.forEach(uc => { ucById[uc.id] = uc; themeByUcId[uc.id] = t; });
+    });
+
+    // ── BUILD SIDEBAR ──────────────────────────────────────────────
+    const sidebar = document.getElementById('sidebar');
+    const sLabel = document.createElement('div');
+    sLabel.className = 'sidebar-label'; sLabel.textContent = 'Themes';
+    sidebar.appendChild(sLabel);
+
+    // Overview button
+    const ovBtn = document.createElement('button');
+    ovBtn.className = 'theme-btn active';
+    ovBtn.id = 'btn-overview';
+    ovBtn.innerHTML = `<span class="t-num">⬡</span><span class="t-name">Overview</span>`;
+    ovBtn.onclick = () => showTheme('overview');
+    sidebar.appendChild(ovBtn);
+
+    THEMES.forEach(t => {
+      const btn = document.createElement('button');
+      btn.className = 'theme-btn'; btn.id = `btn-${t.id}`;
+      btn.innerHTML = `<span class="t-num">•</span><span class="t-name">${t.name}</span>`;
+      btn.onclick = () => showTheme(t.id);
+      sidebar.appendChild(btn);
+    });
+
+    // ── RENDER ─────────────────────────────────────────────────────
+    function setActiveBtn(id) {
+      document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+      const target = document.getElementById(`btn-${id}`) || document.getElementById('btn-overview');
+      if (target) target.classList.add('active');
+    }
+
+    function showTheme(key) {
+      setActiveBtn(key);
+      const content = document.getElementById('content');
+
+      if (key === 'overview') {
+        const stages = [
+          {
+            num: 'Stage 1', title: 'Foundation', timing: 'Weeks 1–4',
+            nodes: [
+              { id: 'me2', label: 'Attribution Model', theme: 'Media' },
+              { id: 'op1', label: 'AI-assisted briefing', theme: 'Operations' },
+              { id: 'op2', label: 'Prompt library', theme: 'Operations' },
+              { id: 'kl1', label: 'Knowledge base', theme: 'Knowledge' },
+            ]
+          },
+          {
+            num: 'Stage 2', title: 'Data Layer', timing: 'Weeks 4–10',
+            nodes: [
+              { id: 'au1', label: 'Segmentation & lookalike', theme: 'Audience' },
+              { id: 'in2', label: 'Competitive monitoring', theme: 'Insights' },
+              { id: 'in1', label: 'Automated reporting', theme: 'Insights' },
+              { id: 'cr1', label: 'Creative generation', theme: 'Creative' },
+              { id: 'co1', label: 'Content creation', theme: 'Content' },
+            ]
+          },
+          {
+            num: 'Stage 3', title: 'Optimise', timing: 'Weeks 10–20',
+            nodes: [
+              { id: 'me1', label: 'Campaign setup', theme: 'Media' },
+              { id: 'me3', label: 'Bid optimisation', theme: 'Media' },
+              { id: 'au2', label: 'Dynamic audiences', theme: 'Audience' },
+              { id: 'co2', label: 'Repurposing engine', theme: 'Content' },
+              { id: 'op3', label: 'Campaign intake', theme: 'Operations' },
+              { id: 'kl2', label: 'AI onboarding', theme: 'Knowledge' },
+            ]
+          },
+          {
+            num: 'Stage 4', title: 'Connect', timing: 'Weeks 20–35',
+            nodes: [
+              { id: 'op4', label: 'Governance design', theme: 'Operations' },
+              { id: 'in3', label: 'Attribution & incrementality', theme: 'Insights' },
+              { id: 'in4', label: 'Predictive modelling', theme: 'Insights' },
+              { id: 'cj1', label: 'Journey mapping', theme: 'Journey' },
+              { id: 'cj2', label: 'Conversational AI', theme: 'Journey' },
+              { id: 'kl3', label: 'Institutional memory', theme: 'Knowledge' },
+            ]
+          },
+          {
+            num: 'Stage 5', title: 'Autonomous', timing: 'Weeks 35+',
+            nodes: [
+              { id: 'me5', label: 'Autonomous media', theme: 'Media' },
+              { id: 'au4', label: 'Audience orchestration', theme: 'Audience' },
+              { id: 'cj4', label: 'Journey orchestration', theme: 'Journey' },
+              { id: 'in5', label: 'Auto insights', theme: 'Insights' },
+              { id: 'op5', label: 'Anomaly detection', theme: 'Operations' },
+              { id: 'op6', label: 'Multi-agent network', theme: 'Operations' },
+            ]
+          },
+        ];
+        content.innerHTML = `
       <div class="section-header">
         <div class="section-title">Framework Overview</div>
         <div class="section-goal">Select a theme to explore use cases and dependencies. Click any card to see what it needs and what it unlocks.</div>
@@ -527,7 +920,7 @@ function showTheme(key){
       <div class="crit-path">
         <div class="cp-label">Path from zero AI to AI Embedded</div>
         <div class="cp-stages">
-          ${stages.map((stage,si)=>`
+          ${stages.map((stage, si) => `
             <div class="cp-stage">
               <div class="cp-stage-header">
                 <div class="cp-stage-num">${stage.num}</div>
@@ -535,7 +928,7 @@ function showTheme(key){
                 <div class="cp-stage-timing">${stage.timing}</div>
               </div>
               <div class="cp-nodes">
-                ${stage.nodes.map(n=>`
+                ${stage.nodes.map(n => `
                   <div class="cp-node" onclick="jumpTo('${n.id}')">
                     ${n.label}
                     <div class="cp-theme">${n.theme}</div>
@@ -547,13 +940,13 @@ function showTheme(key){
         </div>
       </div>
       <div class="overview-grid">
-        ${THEMES.map(t=>{
-          const embed=t.useCases.filter(u=>u.level==='EMBEDDED').length;
-          const cross=t.useCases.filter(u=>u.needs.some(id=>themeByUcId[id]?.id!==t.id)).length;
+        ${THEMES.map(t => {
+          const embed = t.useCases.filter(u => u.level === 'EMBEDDED').length;
+          const cross = t.useCases.filter(u => u.needs.some(id => themeByUcId[id]?.id !== t.id)).length;
           return `<div class="overview-card" onclick="showTheme('${t.id}')">
             <div class="ov-num">•</div>
             <div class="ov-name">${t.name}</div>
-            <div class="ov-bar"><div class="ov-bar-fill" style="width:${(t.useCases.length/6)*100}%"></div></div>
+            <div class="ov-bar"><div class="ov-bar-fill" style="width:${(t.useCases.length / 6) * 100}%"></div></div>
             <div class="ov-stats">
               <span class="ov-stat">${t.useCases.length} use cases</span>
               <span class="ov-stat">${embed} embedded</span>
@@ -561,91 +954,92 @@ function showTheme(key){
           </div>`;
         }).join('')}
       </div>`;
-    return;
-  }
+        return;
+      }
 
-  const theme=themeById[key];
-  if(!theme) return;
+      const theme = themeById[key];
+      if (!theme) return;
 
-  content.innerHTML=`
+      content.innerHTML = `
     <div class="section-header">
       <div class="section-num">Theme ${theme.num} of 08</div>
       <div class="section-title">${theme.name}</div>
       <div class="section-goal">${theme.goal}</div>
     </div>
     <div class="uc-grid">
-      ${theme.useCases.map(uc=>renderUcCard(uc,theme)).join('')}
+      ${theme.useCases.map(uc => renderUcCard(uc, theme)).join('')}
     </div>`;
-}
+    }
 
-function renderUcCard(uc, theme){
-  const needTags = uc.needs.map(id=>{
-    const t=themeByUcId[id]; const u=ucById[id];
-    return `<span class="dep-tag" onclick="event.stopPropagation();jumpTo('${id}')" title="${u?.name}">${id} · ${u?.name||id}</span>`;
-  }).join('');
+    function renderUcCard(uc, theme) {
+      const needTags = uc.needs.map(id => {
+        const t = themeByUcId[id]; const u = ucById[id];
+        return `<span class="dep-tag" onclick="event.stopPropagation();jumpTo('${id}')" title="${u?.name}">${id} · ${u?.name || id}</span>`;
+      }).join('');
 
-  return `<div class="uc-card" id="card-${uc.id}" onclick="toggleCard('${uc.id}')">
+      return `<div class="uc-card" id="card-${uc.id}" onclick="toggleCard('${uc.id}')">
     <div class="uc-card-header">
       <span class="level-badge lvl-${uc.level}">${uc.level}</span>
       <span class="uc-title">${uc.name}</span>
     </div>
     <div class="uc-desc">${uc.desc}</div>
-    ${uc.needs.length?`<div class="uc-deps">${needTags}</div>`:''}
+    ${uc.needs.length ? `<div class="uc-deps">${needTags}</div>` : ''}
     <div class="uc-detail">
-      ${uc.needs.length?`<div class="detail-section">
+      ${uc.needs.length ? `<div class="detail-section">
         <div class="detail-label needs">▲ Needs first (${uc.needs.length})</div>
-        ${uc.needs.map(id=>{const t=themeByUcId[id];return `<div class="detail-item"><div class="detail-dot" style="background:${t?.color||'#ccc'}"></div>${ucById[id]?.name} <span style="font-size:9px;color:var(--muted);margin-left:4px">${t?.name}</span></div>`;}).join('')}
-      </div>`:''}
-      ${uc.enables.length?`<div class="detail-section">
+        ${uc.needs.map(id => { const t = themeByUcId[id]; return `<div class="detail-item"><div class="detail-dot" style="background:${t?.color || '#ccc'}"></div>${ucById[id]?.name} <span style="font-size:9px;color:var(--muted);margin-left:4px">${t?.name}</span></div>`; }).join('')}
+      </div>`: ''}
+      ${uc.enables.length ? `<div class="detail-section">
         <div class="detail-label enables">▼ Unlocks (${uc.enables.length})</div>
-        ${uc.enables.map(id=>{const t=themeByUcId[id];return `<div class="detail-item"><div class="detail-dot" style="background:#00A078"></div>${ucById[id]?.name} <span style="font-size:9px;color:var(--muted);margin-left:4px">${t?.name}</span></div>`;}).join('')}
-      </div>`:''}
+        ${uc.enables.map(id => { const t = themeByUcId[id]; return `<div class="detail-item"><div class="detail-dot" style="background:#00A078"></div>${ucById[id]?.name} <span style="font-size:9px;color:var(--muted);margin-left:4px">${t?.name}</span></div>`; }).join('')}
+      </div>`: ''}
     </div>
   </div>`;
-}
+    }
 
-function toggleCard(id){
-  const card=document.getElementById(`card-${id}`);
-  const isOpen=card.classList.contains('open');
-  document.querySelectorAll('.uc-card').forEach(c=>{
-    c.classList.remove('open','highlighted','dep-needs','dep-enables');
-  });
-  if(!isOpen){
-    card.classList.add('open','highlighted');
-    const uc=ucById[id];
-    uc.needs.forEach(nid=>{
-      const c=document.getElementById(`card-${nid}`);
-      if(c) c.classList.add('dep-needs');
+    function toggleCard(id) {
+      const card = document.getElementById(`card-${id}`);
+      const isOpen = card.classList.contains('open');
+      document.querySelectorAll('.uc-card').forEach(c => {
+        c.classList.remove('open', 'highlighted', 'dep-needs', 'dep-enables');
+      });
+      if (!isOpen) {
+        card.classList.add('open', 'highlighted');
+        const uc = ucById[id];
+        uc.needs.forEach(nid => {
+          const c = document.getElementById(`card-${nid}`);
+          if (c) c.classList.add('dep-needs');
+        });
+        uc.enables.forEach(eid => {
+          const c = document.getElementById(`card-${eid}`);
+          if (c) c.classList.add('dep-enables');
+        });
+      }
+    }
+
+    function jumpTo(id) {
+      let targetTheme = null;
+      THEMES.forEach(t => { if (t.useCases.find(u => u.id === id)) targetTheme = t.id; });
+      if (targetTheme) {
+        showTheme(targetTheme);
+        setTimeout(() => {
+          toggleCard(id);
+          const el = document.getElementById(`card-${id}`);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 60);
+      }
+    }
+
+    // ── postMessage from parent iframe ────────────────────────────
+    window.addEventListener('message', e => {
+      if (e.data?.type === 'showTheme' && e.data.themeId) {
+        showTheme(e.data.themeId);
+      }
     });
-    uc.enables.forEach(eid=>{
-      const c=document.getElementById(`card-${eid}`);
-      if(c) c.classList.add('dep-enables');
-    });
-  }
-}
 
-function jumpTo(id){
-  let targetTheme=null;
-  THEMES.forEach(t=>{if(t.useCases.find(u=>u.id===id)) targetTheme=t.id;});
-  if(targetTheme){
-    showTheme(targetTheme);
-    setTimeout(()=>{
-      toggleCard(id);
-      const el=document.getElementById(`card-${id}`);
-      if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
-    },60);
-  }
-}
-
-// ── postMessage from parent iframe ────────────────────────────
-window.addEventListener('message', e=>{
-  if(e.data?.type==='showTheme' && e.data.themeId){
-    showTheme(e.data.themeId);
-  }
-});
-
-// Init
-showTheme('overview');
-</script>
+    // Init
+    showTheme('overview');
+  </script>
 </body>
+
 </html>
